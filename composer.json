@@ -1,5 +1,7 @@
 {
-    "require": {},
+    "require": {
+        "symfony/http-foundation": "^5.1"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.3"
     }
