@@ -2,6 +2,10 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
+
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -10,18 +14,27 @@ $request = Request::createFromGlobals();
 
 $response = new Response();
 
-$map = [ '/hello' => 'hello.php', '/bye' => 'bye.php'];
+$routes = require __DIR__ . '/../src/routes.php';
 
-$pathInfo = $request->getPathInfo();
+$context = new RequestContext();
+$context->fromRequest($request);
 
-if(isset($map[$pathInfo])){
-    extract($request->query->all());
+//Knows all routes and knows the context of this collections routes request
+$urlMatcher = new UrlMatcher($routes, $context);
+
+try{
+    extract($urlMatcher->match($request->getPathInfo()));
+
     ob_start();
-    include __DIR__ . '/../src/pages/' . $map[$pathInfo];
+    include __DIR__ . '/../src/pages/' . $_route .'php';
     $response->setContent(ob_get_clean());
-}else{
+
+}catch(ResourceNotFoundException $e){
     $response->setContent("Not FOund");
     $response->setStatusCode(404);
 }
+
+/**var_dump($resultat);
+die();*/
 
 $response->send();

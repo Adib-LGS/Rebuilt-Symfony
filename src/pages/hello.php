@@ -1,2 +1,2 @@
-Hello <?= htmlspecialchars(isset($name) ? $name : 'World', ENT_QUOTES) ?>
+Hello <?= htmlspecialchars($name, ENT_QUOTES) ?>
 
