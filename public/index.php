@@ -25,11 +25,22 @@ $urlMatcher = new UrlMatcher($routes, $context);
 try{
 
     $resultat = ($urlMatcher->match($request->getPathInfo()));
+
+    //['_controller' => 'App\Controller\PageController@about']
+    $className = substr($resultat['_controller'], 0, strpos($resultat['_controller'], '@'));
+    //var_dump($className);
+
+    $methodeName = substr($resultat['_controller'], strpos($resultat['_controller'], '@'), + 1);
+    //var_dump($methodeName);
+
+    //Callable
+    $controller = [new $className, $methodeName];
+
     $request->attributes->add($resultat);
     //var_dump($request->attributes);
 
     //callable func in routes.php
-    $response = call_user_func($resultat['_controller'], $request);
+    $response = call_user_func($controller, $request);
 
 }catch(ResourceNotFoundException $e){
     $response->setContent("Not FOund");
