@@ -23,11 +23,13 @@ $context->fromRequest($request);
 $urlMatcher = new UrlMatcher($routes, $context);
 
 try{
-    extract($urlMatcher->match($request->getPathInfo()));
 
-    ob_start();
-    include __DIR__ . '/../src/pages/' . $_route .'php';
-    $response->setContent(ob_get_clean());
+    $resultat = ($urlMatcher->match($request->getPathInfo()));
+    $request->attributes->add($resultat);
+    //var_dump($request->attributes);
+
+    //callable func in routes.php
+    $response = call_user_func($resultat['_controller'], $request);
 
 }catch(ResourceNotFoundException $e){
     $response->setContent("Not FOund");
@@ -36,5 +38,4 @@ try{
 
 /**var_dump($resultat);
 die();*/
-
 $response->send();
