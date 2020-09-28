@@ -5,9 +5,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class GreetingController {
-    public function hello(Request $request)
+    public function hello(Request $request, $name)
     {
-        $name = $request->attributes->get('name');
+        //$name = $request->attributes->get('name');
         //Add HTML Pages
         ob_start();
         include __DIR__ . '/../pages/hello.php';
