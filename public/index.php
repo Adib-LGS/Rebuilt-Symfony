@@ -29,8 +29,7 @@ $argumentResolver = new ArgumentResolver();
 
 try{
 
-    $resultat = ($urlMatcher->match($request->getPathInfo()));
-    $request->attributes->add($resultat);
+    $request->attributes->add($urlMatcher->match($request->getPathInfo()));
     //var_dump($request->attributes);
 
     $controller = $controllerResolver->getController($request);
